@@ -1,28 +1,20 @@
-# Tiny Chess 4KB
+# tiny-chess-01 engine
 
-[![make.fun bounty tiny-chess-01](https://make.fun/badge/tiny-chess-01.svg)](https://make.fun/?ref=t6g9x6hv)
+A chess engine written for the make.fun **tiny-chess-01** bounty: the strongest chess engine in 4 KB of Python.
 
-A complete chess engine squeezed into one Python file under 4 KB for the
-make.fun bounty `tiny-chess-01`. The source is stored lzma-compressed inside
-`main.py`, which unpacks and runs it at start-up. Strength is checked against
-the house practice games (see Testing).
+`main.py` is the whole engine. It is packed as an lzma-compressed base64 payload inside `main.py`, which unpacks and runs it, so the committed file stays under the 4,096-byte cap.
 
-## Run
+## Techniques
 
-```sh
-MAKEFUN_ENV_URL=http://127.0.0.1:PORT MAKEFUN_PROMPT_FILE=prompt.txt python -P -s main.py
-```
+- 0x88 mailbox move generation
+- Iterative deepening with a fixed node budget (deterministic)
+- Alpha-beta with late-move reductions
+- Quiescence search
+- Killer/history move ordering
+- Piece-square tables with a phase-interpolated endgame king term
 
-## How it works
+## Run locally
 
-- 0x88 mailbox board with array-based move generation
-- iterative deepening alpha-beta search under a per-move time budget
-- quiescence search on captures to avoid horizon blunders
-- material plus piece-square tables for evaluation
+Point `MAKEFUN_ENV_URL` at the practice env, `POST /game` to start a game, then `POST /move` with UCI moves (e.g. `e2e4`).
 
-## Testing
-
-The local practice trial plays eight house games from trial 0 and scores them
-as an Elo. The site's practice floor is 1,154 Elo points.
-
-Built for [make.fun](https://make.fun/?ref=t6g9x6hv).
+MIT licensed.
